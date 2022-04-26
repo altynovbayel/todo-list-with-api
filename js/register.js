@@ -10,6 +10,14 @@ const $blockBody = document.querySelector('.block_body')
 
 const baseUrl = 'https://todo-itacademy.herokuapp.com/api'
 
+window.addEventListener('load', () => {
+  const accessToken = localStorage.getItem('accessToken')
+
+  if (accessToken) {
+    window.open('../auth.html', '_self')
+  }
+})
+
 function getRegister(endPoint){
   fetch(`${baseUrl}/${endPoint}`, {
     method:'POST',
@@ -50,10 +58,3 @@ $btn.addEventListener('click', e => {
   }
 })
 
-window.addEventListener('load', () => {
-  const accessToken = localStorage.getItem('accessToken')
-
-  if(accessToken){
-    window.open('../auth.html', '_self')
-  }
-})
