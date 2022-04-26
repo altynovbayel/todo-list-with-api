@@ -64,3 +64,9 @@ body{
 .registerBtn:hover{
   background-color: transparent;
 }
+
+@media (max-width: 420px) {
+  .block{
+    width: 90%;
+  }
+}

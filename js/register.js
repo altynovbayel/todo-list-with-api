@@ -26,12 +26,17 @@ function getRegister(endPoint){
     localStorage.setItem('accessToken', r.accessToken)
     localStorage.setItem('refreshToken', r.refreshToken)
     localStorage.setItem('userId', r.user.id)
-    console.log(r.user);
+    localStorage.setItem('isActivated', r.user.isActivated)
+    window.open('../auth.html', '_self')
+  })
+  .finally( () => {
+    $btn.disabled = false 
   })
 }
 
 $btn.addEventListener('click', e => {
   e.preventDefault()
+  $btn.disabled = true
 
   if($email.value.length === 0 || $pass.value.length === 0){
     if ($email.value.length === 0){
@@ -42,8 +47,13 @@ $btn.addEventListener('click', e => {
     }
   }else{
     getRegister('registration')
-    $blockBody.innerHTML = `
-      <h1>Мы отправили ссылку на вашу почту</h1>
-    `
+  }
+})
+
+window.addEventListener('load', () => {
+  const accessToken = localStorage.getItem('accessToken')
+
+  if(accessToken){
+    window.open('../auth.html', '_self')
   }
 })

@@ -25,13 +25,17 @@ function getRegister(endPoint) {
       localStorage.setItem('accessToken', r.accessToken)
       localStorage.setItem('refreshToken', r.refreshToken)
       localStorage.setItem('userId', r.user.id)
-      console.log(r.user);
+      if(r.user.isActivated){
+        window.open('./index.html', '_self')
+        localStorage.setItem('isActivated', r.user.isActivated)
+      }
     })
+    .finally(() => $btn.disabled = false)
 }
 
 $btn.addEventListener('click', e => {
   e.preventDefault()
-
+  $btn.disabled = true
   if ($email.value.length === 0 || $pass.value.length === 0) {
     if ($email.value.length === 0) {
       $email.classList.add('active')
@@ -41,5 +45,12 @@ $btn.addEventListener('click', e => {
     }
   } else {
     getRegister('login')
+  }
+})
+
+window.addEventListener('load', () => {
+  const active = localStorage.getItem('isActivated')
+  if(active){
+    window.open('./index.html', '_self')
   }
 })
