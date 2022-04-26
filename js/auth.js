@@ -51,6 +51,6 @@ $btn.addEventListener('click', e => {
 window.addEventListener('load', () => {
   const active = localStorage.getItem('isActivated')
   if(active){
-    window.open('./index.html', '_self')
+    window.open('../index.html', '_self')
   }
 })
