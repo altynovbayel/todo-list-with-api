@@ -2,6 +2,7 @@ const $email = document.querySelector('.emailInput')
 const $pass = document.querySelector('.passInput')
 const $btn = document.querySelector('.registerBtn')
 const $blockBody = document.querySelector('.block_body')
+const $eyeBtn = document.querySelector('.eye')
 
 // https://todo-itacademy.herokuapp.com/api/registration
 // https://todo-itacademy.herokuapp.com/api/login
@@ -12,10 +13,12 @@ const baseUrl = 'https://todo-itacademy.herokuapp.com/api'
 
 window.addEventListener('load', () => {
   const accessToken = localStorage.getItem('accessToken')
-
-  if (accessToken) {
+  if (accessToken === 'undefined') {
+    localStorage.clear()
+  }else if (accessToken) {
     window.open('../auth.html', '_self')
   }
+
 })
 
 function getRegister(endPoint){
@@ -23,7 +26,7 @@ function getRegister(endPoint){
     method:'POST',
     body:JSON.stringify({
       email: $email.value,
-      password: $pass.value,
+      password: $pass.value,  
     }),
     headers:{
       'Content-type':'application/json'
@@ -37,7 +40,7 @@ function getRegister(endPoint){
     localStorage.setItem('isActivated', r.user.isActivated)
     window.open('../auth.html', '_self')
   })
-  .finally( () => {
+  .finally(() => {
     $btn.disabled = false 
   })
 }
@@ -57,4 +60,3 @@ $btn.addEventListener('click', e => {
     getRegister('registration')
   }
 })
-

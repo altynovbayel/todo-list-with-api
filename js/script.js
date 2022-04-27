@@ -42,7 +42,10 @@ const requests = {
 
 window.addEventListener('load', () => {
   const accessToken = localStorage.getItem('accessToken')
-
+  const active = localStorage.getItem('isActivated')
+  if(active === 'false'){
+    alert('активируйте свой аккаунт')
+  }
   if (!accessToken) {
     window.open('../auth.html', '_self')
   }
@@ -149,7 +152,7 @@ function deleteTodo(id) {
 
 function editTodo(id) {
   getSingleTodo(id)
-  .then(res => {
+  .then(res => { т
     const askTitle = prompt('New title', res.title)
     const askContent = prompt('New content', res.content)
 
