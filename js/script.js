@@ -152,7 +152,7 @@ function deleteTodo(id) {
 
 function editTodo(id) {
   getSingleTodo(id)
-  .then(res => { т
+  .then(res => {
     const askTitle = prompt('New title', res.title)
     const askContent = prompt('New content', res.content)
 
