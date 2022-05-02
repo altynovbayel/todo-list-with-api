@@ -104,6 +104,9 @@ body{
 .card div{
   margin: 10px 0;
 }
+.title.active{
+  border: 2px solid red;
+}
 .todo_header{
   border-bottom: 1px solid #000;
   padding-bottom: 10px;

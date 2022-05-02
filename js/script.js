@@ -1,9 +1,7 @@
-const $title = document.querySelector('.title')
-const $content = document.querySelector('.content')
-const $date = document.querySelector('.date')
 const $btn = document.querySelector('.add_btn')
 const $row = document.querySelector('.row')
 const $logout = document.querySelector('.logOut')
+const $allInp = document.querySelectorAll('.card_body div input')
 
 const baseUrl = 'https://todo-itacademy.herokuapp.com/api'
 const accessToken = localStorage.getItem('accessToken')
@@ -43,19 +41,36 @@ const requests = {
 window.addEventListener('load', () => {
   const accessToken = localStorage.getItem('accessToken')
   const active = localStorage.getItem('isActivated')
+
   if(active === 'false'){
     alert('активируйте свой аккаунт')
   }
-  if (!accessToken) {
-    window.open('../auth.html', '_self')
-  }
-})
 
-// render todos when window loaded
+  !accessToken && window.open('../auth.html', '_self')
 
-window.addEventListener('load', () => {
   getTodos()
 })
+
+// check validation input
+
+function isValidate(){
+  $allInp.forEach(item => {
+    item.value.length === 0
+    ? item.classList.add('active')
+    : item.classList.remove('active')
+  })
+  return [...$allInp].every(item => item.value)
+}
+
+function getInpValue(){
+  return [...$allInp].reduce((object, item) => {
+    return {
+      ...object,
+      [item.name]:item.value
+    }
+  }, {})
+
+}
 
 // get todos
 
@@ -70,28 +85,14 @@ function getTodos() {
   })
 }
 
-// get single todo
-
-function getSingleTodo(id) {
-
-  return requests.get(`${baseUrl}/todos/${id}`, accessToken)
-
-}
-
 // create todos
 
-function createTodos(title, content, date) {
+function createTodos() {
   $btn.disabled = true
 
-  requests.post(`${baseUrl}/todos/create`, accessToken, {
-    title,
-    content,
-    date,
-  })
-  .then(() => {
-    getTodos()
-  })
-  .finally(() => $btn.disabled = false)
+  requests.post(`${baseUrl}/todos/create`, accessToken, getInpValue())
+  .then(getTodos)
+  .finally($btn.disabled = false)
 }
 
 // card template
@@ -130,10 +131,7 @@ function cardTemplate({
 
 // complete todo
 
-function completeTodo(id) {
-  requests.get(`${baseUrl}/todos/${id}/completed`, accessToken)
-  .then(getTodos)
-}
+const completeTodo = (id) => requests.get(`${baseUrl}/todos/${id}/completed`, accessToken).then(getTodos)
 
 // delete todo
 
@@ -151,10 +149,8 @@ function deleteTodo(id) {
 // edit todo
 
 function editTodo(id) {
-  getSingleTodo(id)
-  .then(res => {
-    const askTitle = prompt('New title', res.title)
-    const askContent = prompt('New content', res.content)
+  requests.get(`${baseUrl}/todos/${id}`, accessToken)
+  .then(res => { 
 
     fetch(`${baseUrl}/todos/${id}`, {
         method: 'PUT',
@@ -163,8 +159,8 @@ function editTodo(id) {
           'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          title: askTitle || res.title,
-          content: askContent || res.content,
+          title: prompt('New title', res.title) || res.title,
+          content: prompt('New content', res.content) || res.content,
         })
       })
       .then(getTodos)
@@ -176,7 +172,7 @@ $btn.addEventListener('click', e => {
 
   $btn.disabled = true
 
-  createTodos($title.value, $content.value, $date.value)
+  isValidate() && createTodos()
 })
 
 $logout.addEventListener('click', e => {
@@ -195,11 +191,3 @@ $logout.addEventListener('click', e => {
   })
 
 })
-
-//  refreshToken
-
-function getRefresh(){
-  requests.post(`${baseUrl}/refresh`, accessToken, {refreshToken})
-  .then(res => console.log(res))
-  alert('перезайдите на свой аккаунт')
-}

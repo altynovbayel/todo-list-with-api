@@ -72,15 +72,15 @@ button{
 .registerBtn:hover{
   background-color: transparent;
 }
-.passInput{
+.passInp{
   position: relative;
 }
-.eye{
-  width: 30px;
-  height: 30px;
+.eye, .close{
   position: absolute;
   background-color: black;
-  
+  padding: 5px 5px;
+  top: 17px;
+  right: 50px;
 }
 
 @media (max-width: 420px) {

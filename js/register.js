@@ -3,11 +3,8 @@ const $pass = document.querySelector('.passInput')
 const $btn = document.querySelector('.registerBtn')
 const $blockBody = document.querySelector('.block_body')
 const $eyeBtn = document.querySelector('.eye')
-
-// https://todo-itacademy.herokuapp.com/api/registration
-// https://todo-itacademy.herokuapp.com/api/login
-// https://todo-itacademy.herokuapp.com/api/create
-// https://todo-itacademy.herokuapp.com/api/todos
+const $showBtn = document.querySelector('.show_btn')
+const $inputVal = document.querySelectorAll('.block_body div input')
 
 const baseUrl = 'https://todo-itacademy.herokuapp.com/api'
 
@@ -21,13 +18,29 @@ window.addEventListener('load', () => {
 
 })
 
+function isValidate() {
+  $allInp.forEach(item => {
+    item.value.length === 0
+      ? item.classList.add('active')
+      : item.classList.remove('active')
+  })
+  return [...$allInp].every(item => item.value)
+}
+
+function getInpValue() {
+  return [...$allInp].reduce((object, item) => {
+    return {
+      ...object,
+      [item.name]: item.value
+    }
+  }, {})
+
+}
+
 function getRegister(endPoint){
   fetch(`${baseUrl}/${endPoint}`, {
     method:'POST',
-    body:JSON.stringify({
-      email: $email.value,
-      password: $pass.value,  
-    }),
+    body:JSON.stringify(getInpValue()),
     headers:{
       'Content-type':'application/json'
     }
@@ -48,15 +61,16 @@ function getRegister(endPoint){
 $btn.addEventListener('click', e => {
   e.preventDefault()
   $btn.disabled = true
-
-  if($email.value.length === 0 || $pass.value.length === 0){
-    if ($email.value.length === 0){
-      $email.classList.add('active')
-    }
-    if ($pass.value.length === 0){
-      $pass.classList.add('active')
-    }
-  }else{
-    getRegister('registration')
-  }
+  isValidate() && getRegister('registration')
 })
+
+$eyeBtn.addEventListener('click', e => {
+  e.preventDefault()
+
+  setInputType('text')
+
+})
+
+function setInputType(type){
+  $pass.setAttribute('type', type)
+}
